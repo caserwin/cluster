@@ -81,7 +81,9 @@ public class DBScanRun {
         return cluster(corePointClusterSet);
     }
 
-
+    /**
+     * 返回所有核心对象
+     */
     public HashSet<DBScanPoint> getCorePoints() {
         HashSet<DBScanPoint> corePointSet = new HashSet<>();
         for (String corePointID : corePointIDList) {
@@ -146,38 +148,6 @@ public class DBScanRun {
             }
         }
     }
-
-
-//    /**
-//     * 得到核心对象聚合后的集合
-//     */
-//    private HashSet<HashSet<String>> getCorePointCluster() {
-//        HashMap<String, HashSet<String>> corePointClusterMap = new HashMap<>();
-//        HashSet<HashSet<String>> corePointClusterSet = new HashSet<>();
-//        for (Map.Entry<String, Double> entry : pointDistMap.entrySet()) {
-//            String[] ids = entry.getKey().split("_");
-//            if (!corePointIDList.contains(ids[0]) || !corePointIDList.contains(ids[1])) {
-//                continue;
-//            }
-//            if (entry.getValue() < r) {
-//                boolean isExist = false;
-//                for (HashSet<String> cluster : corePointClusterMap.values()) {
-//                    if (cluster.contains(ids[0]) || cluster.contains(ids[1])) {
-//                        cluster.add(ids[0]);
-//                        cluster.add(ids[1]);
-//                        isExist = true;
-//                    }
-//                }
-//                if (!isExist) {
-//                    HashSet<String> cluster = new HashSet<>();
-//                    cluster.add(ids[0]);
-//                    cluster.add(ids[1]);
-//                    corePointClusterSet.add(cluster);
-//                }
-//            }
-//        }
-//        return corePointClusterSet;
-//    }
 
     /**
      * 得到核心对象聚合后的集合
