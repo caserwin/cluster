@@ -8,8 +8,6 @@ import java.util.*;
 
 /**
  * Created by yidxue on 2018/11/1
- *
- * @author yidxue
  */
 public class DBScanRun {
 
