@@ -1,14 +1,14 @@
-package cluster.kmeans;
+package demo;
 
+import cluster.kmeans.KMeansRun;
 import cluster.kmeans.bean.KMeansCluster;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
  * Created by yidxue on 2018/4/7
- * @author yidxue
  */
-public class Main {
+public class KMeanDemo {
 
     public static void main(String[] args) {
         ArrayList<float[]> dataSet = new ArrayList<>();

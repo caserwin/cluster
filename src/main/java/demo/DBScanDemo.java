@@ -1,5 +1,6 @@
-package cluster.dbscan;
+package demo;
 
+import cluster.dbscan.DBScanRun;
 import cluster.dbscan.bean.DBScanCluster;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * Created by yidxue on 2018/11/1
  */
-public class Main {
+public class DBScanDemo {
     public static void main(String[] args) {
         ArrayList<float[]> dataSet = new ArrayList<>();
 
