@@ -4,6 +4,8 @@ import cluster.kmeans.bean.KMeansCluster;
 import cluster.kmeans.bean.KMeansPoint;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by yidxue on 2018/11/1
@@ -22,8 +24,8 @@ public class KMeansClusterTest {
         members2.add(new KMeansPoint(new float[]{1,2,4}));
         members2.add(new KMeansPoint(new float[]{1,2,5}));
 
-        KMeansCluster kMeansCluster1 = new KMeansCluster(1, new KMeansPoint(f), members1);
-        KMeansCluster kMeansCluster2 = new KMeansCluster(1, new KMeansPoint(f), members2);
+        KMeansCluster kMeansCluster1 = new KMeansCluster(1, f, members1);
+        KMeansCluster kMeansCluster2 = new KMeansCluster(1, f, members2);
 
         System.out.println(kMeansCluster1.equals(kMeansCluster2));
     }

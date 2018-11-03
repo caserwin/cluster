@@ -4,12 +4,14 @@ import cluster.base.BaseModel;
 import cluster.util.DistanceCompute;
 import cluster.kmeans.bean.KMeansCluster;
 import cluster.kmeans.bean.KMeansPoint;
+import cluster.util.Tools;
+
 import java.util.*;
 
 /**
  * Created by yidxue on 2018/4/7
  */
-public class KMeansRun extends BaseModel{
+public class KMeansRun extends BaseModel {
     /**
      * 簇的个数
      */
@@ -90,7 +92,7 @@ public class KMeansRun extends BaseModel{
             // 用于标记是否已经选择过该数据。
             boolean flag = true;
             for (KMeansCluster cluster : clusterSet) {
-                if (cluster.getCenter().equals(point)) {
+                if (Tools.isEqual(cluster.getCenter(), point.getLocalArray())) {
                     flag = false;
                 }
             }
@@ -98,7 +100,7 @@ public class KMeansRun extends BaseModel{
             if (flag) {
                 List<KMeansPoint> members = new ArrayList<>();
                 members.add(point);
-                KMeansCluster cluster = new KMeansCluster(id, point, members);
+                KMeansCluster cluster = new KMeansCluster(id, point.getLocalArray(), members);
                 clusterSet.add(cluster);
                 id++;
             }
@@ -114,7 +116,7 @@ public class KMeansRun extends BaseModel{
         for (KMeansPoint point : pointList) {
             float minDis = Integer.MAX_VALUE;
             for (KMeansCluster cluster : clusterSet) {
-                float tmpDis = (float) Math.min(disC.getEuclideanDis(point, cluster.getCenter()), minDis);
+                float tmpDis = (float) Math.min(disC.getEuclideanDis(point.getLocalArray(), cluster.getCenter()), minDis);
                 if (tmpDis != minDis) {
                     minDis = tmpDis;
                     point.setClusterId(cluster.getId());
@@ -152,11 +154,11 @@ public class KMeansRun extends BaseModel{
                 sumAll[i] = sumAll[i] / pointList.size();
             }
             // 计算两个新、旧中心的距离，如果任意一个类中心移动的距离大于dis_diff则继续迭代。
-            if (disC.getEuclideanDis(cluster.getCenter(), new KMeansPoint(sumAll)) > disDiff) {
+            if (disC.getEuclideanDis(cluster.getCenter(), new KMeansPoint(sumAll).getLocalArray()) > disDiff) {
                 ifNeedIter = true;
             }
             // 设置新的类中心位置
-            cluster.setCenter(new KMeansPoint(sumAll));
+            cluster.setCenter(new KMeansPoint(sumAll).getLocalArray());
         }
         return ifNeedIter;
     }

@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Created by yidxue on 2018/11/1
  */
-public class DBScanRun extends BaseModel{
+public class DBScanRun extends BaseModel {
 
     private double r;
     private int support;
@@ -132,7 +132,7 @@ public class DBScanRun extends BaseModel{
                 String pointTag = id1 < id2 ? id1 + "_" + id2 : id2 + "_" + id1;
                 double dist;
                 if (!pointDistMap.containsKey(pointTag)) {
-                    dist = distanceCompute.getEuclideanDis(point1, point2);
+                    dist = distanceCompute.getPointEuclideanDis(point1, point2);
                     pointDistMap.put(pointTag, dist);
                 } else {
                     dist = pointDistMap.get(pointTag);

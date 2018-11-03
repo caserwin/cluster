@@ -15,17 +15,17 @@ public abstract class BaseCluster<T> {
     /**
      * 中心
      */
-    protected T center;
+    protected float[] center;
     /**
      * 成员
      */
     protected List<T> members = new ArrayList<T>();
 
-    public T getCenter() {
+    public float[] getCenter() {
         return center;
     }
 
-    public void setCenter(T center) {
+    public void setCenter(float[] center) {
         this.center = center;
     }
 

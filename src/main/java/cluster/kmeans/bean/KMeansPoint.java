@@ -5,7 +5,7 @@ import cluster.base.BasePoint;
 /**
  * Created by yidxue on 2018/4/7
  */
-public class KMeansPoint extends BasePoint{
+public class KMeansPoint extends BasePoint {
     /**
      * 标识和所属类中心的距离。
      */
@@ -40,7 +40,7 @@ public class KMeansPoint extends BasePoint{
         for (float aLocalArray : localArray) {
             result.append(aLocalArray).append(" ");
         }
-        return result.toString().trim()+"] clusterId: "+clusterId+" dist: "+getDist();
+        return result.toString().trim() + "] clusterId: " + clusterId + " dist: " + getDist();
     }
 
     @Override

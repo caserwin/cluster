@@ -160,7 +160,7 @@ public class HierarchicalRun extends BaseModel {
                 }
             }
 
-            assert nearestCluster != null;
+//            assert nearestCluster != null;
             nearestClusterMap.put(cid1, nearestCluster.getId());
         }
         return nearestClusterMap;
@@ -171,8 +171,8 @@ public class HierarchicalRun extends BaseModel {
      * 合并两个类
      */
     private HierarchicalCluster mergeCluster(int id, HierarchicalCluster cluster1, HierarchicalCluster cluster2) {
-        float[] centre1 = cluster1.getCenterLocal();
-        float[] centre2 = cluster2.getCenterLocal();
+        float[] centre1 = cluster1.getCenter();
+        float[] centre2 = cluster2.getCenter();
 
         if (dim != centre1.length || dim != centre2.length) {
             throw new IllegalArgumentException("error data length !");

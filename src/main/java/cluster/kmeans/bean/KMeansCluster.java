@@ -1,14 +1,17 @@
 package cluster.kmeans.bean;
 
 import cluster.base.BaseCluster;
+import cluster.util.TypeTrans;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by yidxue on 2018/4/7
  */
 public class KMeansCluster extends BaseCluster<KMeansPoint> {
 
-    public KMeansCluster(int id, KMeansPoint center, List<KMeansPoint> members) {
+    public KMeansCluster(int id, float[] center, List<KMeansPoint> members) {
         this.id = id;
         this.center = center;
         this.members = members;
@@ -19,12 +22,12 @@ public class KMeansCluster extends BaseCluster<KMeansPoint> {
     }
 
     @Override
-    public KMeansPoint getCenter() {
+    public float[] getCenter() {
         return center;
     }
 
     @Override
-    public void setCenter(KMeansPoint center) {
+    public void setCenter(float[] center) {
         this.center = center;
     }
 
@@ -75,7 +78,8 @@ public class KMeansCluster extends BaseCluster<KMeansPoint> {
 
     @Override
     public String toString() {
-        StringBuilder toString = new StringBuilder("Cluster \n" + "Cluster_id=" + this.id + ", center:{" + this.center.toString() + "}");
+        String centre = Arrays.stream(TypeTrans.getDoubleByFloat(center)).mapToObj(String::valueOf).collect(Collectors.joining(","));
+        StringBuilder toString = new StringBuilder("Cluster \n" + "Cluster_id=" + this.id + ", center:{" + centre + "}");
         for (KMeansPoint point : members) {
             toString.append("\n").append(point.toString());
         }

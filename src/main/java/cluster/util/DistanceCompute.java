@@ -7,29 +7,18 @@ import java.util.List;
 /**
  * Created by yidxue on 2018/4/7
  */
-public class DistanceCompute<T> {
+public class DistanceCompute {
 
     private final static String CLUATSER_MAX = "max";
     private final static String CLUATSER_MIN = "min";
     private final static String CLUATSER_AVG = "avg";
 
+
     /**
      * 两个点的欧式距离
      */
-    public double getEuclideanDis(BasePoint p1, BasePoint p2) {
-        double countDis = 0;
-        float[] p1LocalArray = p1.getLocalArray();
-        float[] p2LocalArray = p2.getLocalArray();
-
-        if (p1LocalArray.length != p2LocalArray.length) {
-            throw new IllegalArgumentException("length of array must be equal!");
-        }
-
-        for (int i = 0; i < p1LocalArray.length; i++) {
-            countDis += Math.pow(p1LocalArray[i] - p2LocalArray[i], 2);
-        }
-
-        return Math.sqrt(countDis);
+    public double getPointEuclideanDis(BasePoint point1, BasePoint point2){
+        return getEuclideanDis(point1.getLocalArray(), point2.getLocalArray());
     }
 
     /**
@@ -49,10 +38,10 @@ public class DistanceCompute<T> {
                 dis = getClusterMaxOrMinDis(cluster1, cluster2)[1];
                 break;
             case "avg":
-                dis = getEuclideanDis((BasePoint) cluster1.getCenter(), (BasePoint) cluster2.getCenter());
+                dis = getEuclideanDis(cluster1.getCenter(), cluster2.getCenter());
                 break;
             default:
-                dis = getEuclideanDis((BasePoint) cluster1.getCenter(), (BasePoint) cluster2.getCenter());
+                dis = getEuclideanDis(cluster1.getCenter(), cluster2.getCenter());
                 break;
         }
         return dis;
@@ -66,11 +55,28 @@ public class DistanceCompute<T> {
 
         for (Object p1 : points1) {
             for (Object p2 : points2) {
-                double dist = getEuclideanDis((BasePoint) p1, (BasePoint) p2);
+                double dist = getEuclideanDis(((BasePoint) p1).getLocalArray(), ((BasePoint) p2).getLocalArray());
                 res[0] = dist < res[0] ? dist : res[0];
                 res[1] = dist > res[1] ? dist : res[1];
             }
         }
         return res;
+    }
+
+    /**
+     * 求欧氏距离
+     */
+    public double getEuclideanDis(float[] p1LocalArray, float[] p2LocalArray) {
+        double countDis = 0;
+
+        if (p1LocalArray.length != p2LocalArray.length) {
+            throw new IllegalArgumentException("length of array must be equal!");
+        }
+
+        for (int i = 0; i < p1LocalArray.length; i++) {
+            countDis += Math.pow(p1LocalArray[i] - p2LocalArray[i], 2);
+        }
+
+        return Math.sqrt(countDis);
     }
 }
