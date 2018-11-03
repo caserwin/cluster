@@ -1,4 +1,4 @@
-package demo;
+package cluster.dbscan;
 
 import cluster.dbscan.DBScanRun;
 import cluster.dbscan.bean.DBScanCluster;
@@ -17,9 +17,7 @@ public class DBScanDemo {
         dataSet.add(new float[]{3, 3});
         dataSet.add(new float[]{5, 4});
         dataSet.add(new float[]{4, 3});
-
-//        dataSet.add(new float[]{6, 6});
-
+        dataSet.add(new float[]{6, 6});
         dataSet.add(new float[]{6, 8});
         dataSet.add(new float[]{7, 9});
         dataSet.add(new float[]{8, 10});

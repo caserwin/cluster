@@ -1,4 +1,4 @@
-package demo;
+package cluster.hierarchical;
 
 import cluster.hierarchical.HierarchicalRun;
 import cluster.hierarchical.bean.HierarchicalCluster;

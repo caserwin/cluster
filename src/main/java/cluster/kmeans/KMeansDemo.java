@@ -1,4 +1,4 @@
-package demo;
+package cluster.kmeans;
 
 import cluster.kmeans.KMeansRun;
 import cluster.kmeans.bean.KMeansCluster;
