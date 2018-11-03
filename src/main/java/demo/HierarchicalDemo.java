@@ -23,11 +23,13 @@ public class HierarchicalDemo {
         dataSet.add(new float[]{3, 9, 7});
         dataSet.add(new float[]{5, 9, 8});
         dataSet.add(new float[]{4, 2, 10});
+        dataSet.add(new float[]{4, 3, 10});
         dataSet.add(new float[]{1, 9, 12});
+        dataSet.add(new float[]{2, 9, 12});
         dataSet.add(new float[]{7, 8, 112});
         dataSet.add(new float[]{7, 8, 4});
 
-        HierarchicalRun hierarchicalRun = new HierarchicalRun(5.0, "avg", dataSet);
+        HierarchicalRun hierarchicalRun = new HierarchicalRun(6, "avg", dataSet);
         List<HierarchicalCluster> clusterList = hierarchicalRun.run();
         for (HierarchicalCluster cluster : clusterList) {
             System.out.println(cluster);

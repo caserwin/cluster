@@ -3,6 +3,7 @@ package cluster.hierarchical;
 import cluster.base.BaseModel;
 import cluster.hierarchical.bean.HierarchicalCluster;
 import cluster.hierarchical.bean.HierarchicalPoint;
+import cluster.util.Constant;
 import cluster.util.DistanceCompute;
 
 import java.util.*;
@@ -11,36 +12,40 @@ import java.util.*;
  * Created by yidxue on 2018/11/2
  */
 public class HierarchicalRun extends BaseModel {
-    private int k;
-    private double dist;
+    /**
+     * 距离类型。类平均距离？类间最大距离？类间最小距离？
+     */
     private String distType;
-    private double globalNearestDistForIter = Integer.MIN_VALUE;
 
+    /**
+     * 记录数据维度
+     */
     private int dim;
     /**
-     * 用于存放，原始数据集所构建的点集
+     * 用于存放原始数据集
      */
-    private List<HierarchicalPoint> pointList = null;
+    private List<float[]> originalData;
 
     /**
-     * 用于存放，原始数据集所构建的点集
+     * 用于存放类别
      */
     private HashMap<Integer, HierarchicalCluster> clusterMap = null;
 
     /**
-     * 用于记录，每一轮最近两个类的距离
+     * 层次聚类类别
      */
-    private HashMap<String, Double> clusterDistMap = null;
+    private String type;
 
+    private int k;
+    private double dist;
+    private double globalNearestDistForIter = Integer.MIN_VALUE;
 
-    private DistanceCompute distanceCompute = new DistanceCompute();
-
-    private List<float[]> originalData;
 
     public HierarchicalRun(double dist, String distType, List<float[]> originalData) {
         this.dist = dist;
         this.distType = distType;
         this.originalData = originalData;
+        this.type = "bydist";
         check();
         init();
     }
@@ -49,6 +54,7 @@ public class HierarchicalRun extends BaseModel {
         this.k = k;
         this.distType = distType;
         this.originalData = originalData;
+        this.type = "byknum";
         check();
         init();
     }
@@ -58,9 +64,13 @@ public class HierarchicalRun extends BaseModel {
      */
     @Override
     public void check() {
-//        if (dist <= 0 || k < 1) {
-//            throw new IllegalArgumentException("dist must be >= 0 and k must be >=1");
-//        }
+        if (dist <= 0 && Constant.HIERARCHICAL_DIST.equals(this.type)) {
+            throw new IllegalArgumentException("dist must be >0");
+        }
+
+        if (k <= 0 && Constant.HIERARCHICAL_KNUM.equals(this.type)) {
+            throw new IllegalArgumentException("k must be >0");
+        }
 
         if (originalData == null) {
             throw new IllegalArgumentException("program can't get real data");
@@ -72,12 +82,10 @@ public class HierarchicalRun extends BaseModel {
      */
     @Override
     public void init() {
-        pointList = new ArrayList<>();
         clusterMap = new HashMap<>();
         dim = originalData.get(0).length;
         for (int i = 0, j = originalData.size(); i < j; i++) {
             HierarchicalPoint point = new HierarchicalPoint(i, originalData.get(i));
-            pointList.add(point);
             // 初始时每一个点设为一个类
             List<HierarchicalPoint> members = new ArrayList<>();
             members.add(point);
@@ -87,55 +95,80 @@ public class HierarchicalRun extends BaseModel {
 
 
     public List<HierarchicalCluster> run() {
-        HashMap<Integer, HierarchicalCluster> clusterMapRes = iter(clusterMap);
+        HashMap<Integer, HierarchicalCluster> clusterMapRes;
+        if (Constant.HIERARCHICAL_DIST.equals(this.type)) {
+            clusterMapRes = iterByDist(clusterMap);
+        } else {
+            clusterMapRes = iterByKNum(clusterMap);
+        }
         return new ArrayList<>(clusterMapRes.values());
     }
 
+
     /**
-     * 迭代
+     * 根据类别个数迭代
      */
-    public HashMap<Integer, HierarchicalCluster> iter(HashMap<Integer, HierarchicalCluster> clusterMap) {
-        System.out.println("globalNearestDistForIter\t" + globalNearestDistForIter);
+    private HashMap<Integer, HierarchicalCluster> iterByKNum(HashMap<Integer, HierarchicalCluster> clusterMap) {
+        if (clusterMap.values().size() <= k) {
+            return clusterMap;
+        } else {
+            // 计算最近的两类
+            String[] nearClusterPair = getNearestClusterMap(clusterMap);
+            HashMap<Integer, HierarchicalCluster> clusterMapNew = new HashMap<>();
+            int count = 0;
+            // 聚合
+            int cid1 = Integer.parseInt(nearClusterPair[0]);
+            int cid2 = Integer.parseInt(nearClusterPair[1]);
+            HierarchicalCluster mergerCluster = mergeCluster(count, clusterMap.get(cid1), clusterMap.get(cid2));
+            clusterMapNew.put(count, mergerCluster);
+            clusterMap.remove(cid1);
+            clusterMap.remove(cid2);
+            count++;
+
+            for (HierarchicalCluster cluster : clusterMap.values()) {
+                cluster.setId(count);
+                clusterMapNew.put(count, cluster);
+                count++;
+            }
+            return iterByKNum(clusterMapNew);
+        }
+    }
+
+
+    /**
+     * 根据距离迭代
+     */
+    private HashMap<Integer, HierarchicalCluster> iterByDist(HashMap<Integer, HierarchicalCluster> clusterMap) {
         if (dist < globalNearestDistForIter || clusterMap.values().size() == 1) {
             return clusterMap;
         } else {
             // 计算最近的两类
-            HashMap<Integer, Integer> nearestClusterMap = getNearestClusterMap(clusterMap);
-
-            for (Map.Entry kv : nearestClusterMap.entrySet()) {
-                System.out.println(kv.getKey() + "-->" + kv.getValue());
-            }
-            System.out.println("=====================");
-
+            String[] nearClusterPair = getNearestClusterMap(clusterMap);
             HashMap<Integer, HierarchicalCluster> clusterMapNew = new HashMap<>();
-            HashSet<Integer> iterSet = new HashSet<>();
-
             int count = 0;
             // 聚合
-            for (int cid : nearestClusterMap.keySet()) {
-                if (iterSet.contains(cid)) {
-                    continue;
-                }
-                int ccid = nearestClusterMap.get(cid);
-                double clusterDist = clusterDistMap.get(cid < ccid ? cid + "_" + ccid : ccid + "_" + cid);
+            int cid1 = Integer.parseInt(nearClusterPair[0]);
+            int cid2 = Integer.parseInt(nearClusterPair[1]);
+            double nearestDist = Double.parseDouble(nearClusterPair[2]);
 
-                if (cid == nearestClusterMap.get(ccid) && clusterDist < dist) {
-                    HierarchicalCluster cluster = mergeCluster(count, clusterMap.get(cid), clusterMap.get(ccid));
-                    iterSet.add(ccid);
-                    clusterMapNew.put(count, cluster);
-                    if (clusterDist > globalNearestDistForIter) {
-                        globalNearestDistForIter = clusterDist;
-                    }
-                } else {
-                    HierarchicalCluster cluster = clusterMap.get(cid);
+            if (nearestDist < dist) {
+                HierarchicalCluster mergerCluster = mergeCluster(count, clusterMap.get(cid1), clusterMap.get(cid2));
+                clusterMapNew.put(count, mergerCluster);
+                clusterMap.remove(cid1);
+                clusterMap.remove(cid2);
+                if (nearestDist > globalNearestDistForIter) {
+                    globalNearestDistForIter = nearestDist;
+                }
+                count++;
+                for (HierarchicalCluster cluster : clusterMap.values()) {
                     cluster.setId(count);
                     clusterMapNew.put(count, cluster);
+                    count++;
                 }
-                iterSet.add(cid);
-                count++;
-
+                return iterByDist(clusterMapNew);
+            } else {
+                return clusterMap;
             }
-            return iter(clusterMapNew);
         }
     }
 
@@ -143,15 +176,13 @@ public class HierarchicalRun extends BaseModel {
     /**
      * 计算每个类最近的距离类
      */
-    private HashMap<Integer, Integer> getNearestClusterMap(Map<Integer, HierarchicalCluster> clusterMap) {
-        clusterDistMap = new HashMap<>();
-        // 最近的两类
-        HashMap<Integer, Integer> nearestClusterMap = new HashMap<>();
-
+    private String[] getNearestClusterMap(Map<Integer, HierarchicalCluster> clusterMap) {
+        DistanceCompute distanceCompute = new DistanceCompute();
+        HashMap<String, Double> clusterDistMap = new HashMap<>();
+        double nearestDist = Integer.MAX_VALUE;
+        String[] nearClusterPair = new String[3];
         for (HierarchicalCluster cluster1 : clusterMap.values()) {
             int cid1 = cluster1.getId();
-            HierarchicalCluster nearestCluster = null;
-            double nearestDist = Integer.MAX_VALUE;
             for (HierarchicalCluster cluster2 : clusterMap.values()) {
                 int cid2 = cluster2.getId();
                 if (cid1 == cid2) {
@@ -168,12 +199,14 @@ public class HierarchicalRun extends BaseModel {
 
                 if (dist < nearestDist) {
                     nearestDist = dist;
-                    nearestCluster = cluster2;
+                    nearClusterPair[0] = cid1 < cid2 ? String.valueOf(cid1) : String.valueOf(cid2);
+                    nearClusterPair[1] = cid1 > cid2 ? String.valueOf(cid1) : String.valueOf(cid2);
+                    nearClusterPair[2] = String.valueOf(nearestDist);
                 }
             }
-            nearestClusterMap.put(cid1, nearestCluster.getId());
         }
-        return nearestClusterMap;
+
+        return nearClusterPair;
     }
 
 
