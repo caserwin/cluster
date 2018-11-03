@@ -1,5 +1,6 @@
 package cluster.kmeans;
 
+import cluster.base.BaseModel;
 import cluster.util.DistanceCompute;
 import cluster.kmeans.bean.KMeansCluster;
 import cluster.kmeans.bean.KMeansPoint;
@@ -8,7 +9,7 @@ import java.util.*;
 /**
  * Created by yidxue on 2018/4/7
  */
-public class KMeansRun {
+public class KMeansRun extends BaseModel{
     /**
      * 簇的个数
      */
@@ -57,7 +58,8 @@ public class KMeansRun {
     /**
      * 检查规范
      */
-    private void check() {
+    @Override
+    public void check() {
         if (kNum == 0) {
             throw new IllegalArgumentException("k must be the number > 0");
         }
@@ -69,7 +71,8 @@ public class KMeansRun {
     /**
      * 初始化数据集，把数组转化为Point类型。
      */
-    private void init() {
+    @Override
+    public void init() {
         pointList = new ArrayList<>();
         for (int i = 0, j = originalData.size(); i < j; i++) {
             pointList.add(new KMeansPoint(i, originalData.get(i)));

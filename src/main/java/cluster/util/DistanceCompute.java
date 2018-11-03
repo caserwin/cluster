@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by yidxue on 2018/4/7
  */
-public class DistanceCompute {
+public class DistanceCompute<T> {
 
     private final static String CLUATSER_MAX = "max";
     private final static String CLUATSER_MIN = "min";
@@ -36,7 +36,7 @@ public class DistanceCompute {
      * 两个类别的距离
      */
     public double getClusterEuclideanDis(BaseCluster cluster1, BaseCluster cluster2, String type) {
-        if (!CLUATSER_AVG.equals(type.toLowerCase()) || !CLUATSER_MIN.equals(type.toLowerCase()) || !CLUATSER_MAX.equals(type.toLowerCase())) {
+        if (!(CLUATSER_AVG.equals(type.toLowerCase()) || CLUATSER_MIN.equals(type.toLowerCase()) || CLUATSER_MAX.equals(type.toLowerCase()))) {
             throw new IllegalArgumentException("type must be max, min or avg !");
         }
 

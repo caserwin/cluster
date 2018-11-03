@@ -1,5 +1,6 @@
 package cluster.dbscan;
 
+import cluster.base.BaseModel;
 import cluster.dbscan.bean.DBScanCluster;
 import cluster.dbscan.bean.DBScanPoint;
 import cluster.util.DistanceCompute;
@@ -9,7 +10,7 @@ import java.util.*;
 /**
  * Created by yidxue on 2018/11/1
  */
-public class DBScanRun {
+public class DBScanRun extends BaseModel{
 
     private double r;
     private int support;
@@ -47,7 +48,8 @@ public class DBScanRun {
     /**
      * 检查规范
      */
-    private void check() {
+    @Override
+    public void check() {
         if (r <= 0 || support < 1) {
             throw new IllegalArgumentException("r must be >= 0 and num must be >=1");
         }
@@ -60,7 +62,8 @@ public class DBScanRun {
     /**
      * 初始化数据集，把数组转化为Point类型。
      */
-    private void init() {
+    @Override
+    public void init() {
         pointMap = new HashMap<>();
         for (int i = 0, j = originalData.size(); i < j; i++) {
             pointMap.put(String.valueOf(i), new DBScanPoint(i, originalData.get(i)));
