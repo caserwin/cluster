@@ -1,6 +1,7 @@
 ## DBSCAN
-需要两个参数r和support，分别对应密度聚类中的领域半径：r和领域内最小的元素个数：MinPts。DBSCAN根据这两个参数一个样本点是不是核心对象。
+需要两个参数r和support，分别对应密度聚类中的领域半径 r和领域内最小的元素个数 MinPts。DBSCAN根据这两个参数一个样本点是不是核心对象。
 
+以下程序表示，领域半径为4，一个核心对象的领域内最小包含3个样本点。
 ### 样本集1
 ```
     public static void main(String[] args) {
@@ -43,6 +44,8 @@ Point_id=4  isCorePoint= true [6.0 8.0]
 Point_id=8  isCorePoint= false [11.0 15.0]
 ```
 ### 样本集2
+多加了一个样本点。dataSet.add(new float[]{6, 6})，查看结果：
+
 ```
     public static void main(String[] args) {
         ArrayList<float[]> dataSet = new ArrayList<>();
