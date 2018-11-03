@@ -51,7 +51,9 @@ Point_id=8  isCorePoint= false [11.0 15.0]
         dataSet.add(new float[]{3, 3});
         dataSet.add(new float[]{5, 4});
         dataSet.add(new float[]{4, 3});
+
         dataSet.add(new float[]{6, 6});
+
         dataSet.add(new float[]{6, 8});
         dataSet.add(new float[]{7, 9});
         dataSet.add(new float[]{8, 10});

@@ -1,8 +1,6 @@
 package cluster.hierarchical;
 
-import cluster.hierarchical.HierarchicalRun;
 import cluster.hierarchical.bean.HierarchicalCluster;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class HierarchicalDemo {
         dataSet.add(new float[]{7, 8, 112});
         dataSet.add(new float[]{7, 8, 4});
 
-        HierarchicalRun hierarchicalRun = new HierarchicalRun(6, "avg", dataSet);
+        HierarchicalRun hierarchicalRun = new HierarchicalRun(6.0, "avg", dataSet);
         List<HierarchicalCluster> clusterList = hierarchicalRun.run();
         for (HierarchicalCluster cluster : clusterList) {
             System.out.println(cluster);

@@ -1,8 +1,6 @@
 package cluster.dbscan;
 
-import cluster.dbscan.DBScanRun;
 import cluster.dbscan.bean.DBScanCluster;
-
 import java.util.ArrayList;
 import java.util.List;
 

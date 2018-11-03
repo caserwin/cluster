@@ -1,6 +1,5 @@
 package cluster.kmeans;
 
-import cluster.kmeans.KMeansRun;
 import cluster.kmeans.bean.KMeansCluster;
 import java.util.ArrayList;
 import java.util.HashSet;
