@@ -8,7 +8,7 @@ import java.util.HashSet;
 /**
  * Created by yidxue on 2018/4/7
  */
-public class KMeanDemo {
+public class KMeansDemo {
 
     public static void main(String[] args) {
         ArrayList<float[]> dataSet = new ArrayList<>();

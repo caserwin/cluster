@@ -104,7 +104,6 @@ public class HierarchicalRun extends BaseModel {
         return new ArrayList<>(clusterMapRes.values());
     }
 
-
     /**
      * 根据类别个数迭代
      */

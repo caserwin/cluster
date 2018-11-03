@@ -114,7 +114,6 @@ public class DBScanRun extends BaseModel {
         return list;
     }
 
-
     /**
      * 得到所有核心对象
      */
